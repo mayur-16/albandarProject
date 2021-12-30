@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
 
               
               ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: _loading?Colors.blueGrey:Colors.green),
+                style: ElevatedButton.styleFrom(primary: _loading?Colors.blueGrey:Colors.blue),
                   onPressed: (){
                     if(_formKey.currentState!.validate()){
 

@@ -31,7 +31,7 @@ class MyDrawer extends StatelessWidget {
                     ),
                     CircleAvatar(
                       radius: 40,
-                      backgroundColor: Colors.grey.shade400,
+                      backgroundColor: Colors.grey.shade200,
                       child: const Icon(Icons.person, color: Colors.black45),
                     ),
                   ],
@@ -56,7 +56,7 @@ class MyDrawer extends StatelessWidget {
                 title: Text("${logindata['phoneno']}",
                     style: const TextStyle(color: Colors.black87))),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(primary: Colors.blueGrey),
+              style: ElevatedButton.styleFrom(primary: Colors.blue.shade700),
                 onPressed: () async {
                   SharedPreferences sharedPreferences =
                   await SharedPreferences.getInstance();
