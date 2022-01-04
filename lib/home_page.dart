@@ -14,7 +14,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Map logindata = {};
-   TextStyle cardtextstyle= const TextStyle(fontSize: 15,color: Colors.black54);
+   TextStyle cardtextStyle1= const TextStyle(fontSize: 15,color: Colors.white70);
+  TextStyle cardtextStyle2= const TextStyle(fontSize: 15,color: Colors.white);
+  final ButtonStyle cardStyle1=ElevatedButton.styleFrom(
+       primary: Colors.lightBlue.shade800,
+       onPrimary: Colors.black45,
+       shadowColor: Colors.blue.shade300,
+       elevation: 15,
+       shape: RoundedRectangleBorder(
+         borderRadius: BorderRadius.circular(15),
+       ));
+
+  final ButtonStyle cardStyle2=ElevatedButton.styleFrom(
+      primary: Colors.lightBlue,
+      onPrimary: Colors.black45,
+      shadowColor: Colors.blue.shade300,
+      elevation: 10,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ));
 
   @override
   Widget build(BuildContext context) {
@@ -30,116 +48,98 @@ class _HomePageState extends State<HomePage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
+            Image.asset("assets/icons/albandericon.jpg",height: 100,width: 100),
+            const SizedBox(height: 20),
             Text(
-              "Hello\n${logindata['firstname']}",
+              "${logindata['title']} ${logindata['firstname']} ${logindata['surname']}",
               textAlign: TextAlign.center,
               style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.black26),
             ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+            const SizedBox(height: 20),
+            Expanded(
+              child: GridView.extent(
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              primary: false,
+              padding: const EdgeInsets.all(8),
+              maxCrossAxisExtent: 200.0,
+              childAspectRatio: 1.8,
+              shrinkWrap: true,
               children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) =>
-                                  MemberProfile(logindata: logindata)));
-                    },
-                    child: Hero(
-                      tag:"memprof",
-                      child: Card(
-                        elevation: 10,
-                        color: Colors.green.shade300,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child:  Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Text(
-                            "Member\nProfile",
-                            textAlign: TextAlign.center,
-                            style: cardtextstyle,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                Hero(
+                  tag: "memprof",
+                  child: ElevatedButton(
+                    style: cardStyle1,
+                      onPressed: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) =>
+                                    MemberProfile(logindata: logindata)));
+                      },
+                      child: Text("Member\nProfile",
+                      textAlign: TextAlign.center,
+                          style: cardtextStyle1,)),
                 ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {},
-                    child: Card(
-                      elevation: 10,
-                      color: Colors.red.shade300,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child:  Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Text("Member\nactivity",
-                            textAlign: TextAlign.center,
-                        style: cardtextstyle,),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
+
+                ElevatedButton(
+                    style: cardStyle2,
+                    onPressed: (){},
+                    child: Text("Member\nagreement",
+                      textAlign: TextAlign.center,
+                      style: cardtextStyle2,)),
+
+                ElevatedButton(
+                    style: cardStyle2,
+                    onPressed: (){
                       Navigator.of(context).push(MaterialPageRoute(builder: (_)=>const AllServicesPage()));
                     },
-                    child: Card(
-                      elevation: 10,
-                      color: Colors.blue.shade300,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child:  Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Text(
-                          "Product&\nservices",
-                          textAlign: TextAlign.center,
-                          style: cardtextstyle,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {},
-                    child: Card(
-                      elevation: 10,
-                      color: Colors.purple.shade300,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child:  Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Text("Payment\n&grids",
-                            textAlign: TextAlign.center,
-                          style: cardtextstyle),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            )
+                    child: Text("Product&\nservices",
+                      textAlign: TextAlign.center,
+                      style: cardtextStyle2,)),
+
+                ElevatedButton(
+                    style: cardStyle1,
+                    onPressed: (){},
+                    child: Text("Payment\n&bills",
+                      textAlign: TextAlign.center,
+                      style: cardtextStyle1,)),
+
+                ElevatedButton(
+                    style: cardStyle1,
+                    onPressed: (){},
+                    child: Text("Reports",
+                      textAlign: TextAlign.center,
+                      style: cardtextStyle1,)),
+
+                ElevatedButton(
+                    style: cardStyle2,
+                    onPressed: (){},
+                    child: Text("Notifications",
+                      textAlign: TextAlign.center,
+                      style: cardtextStyle2,)),
+
+                ElevatedButton(
+                    style: cardStyle2,
+                    onPressed: (){},
+                    child: Text("Dependence",
+                      textAlign: TextAlign.center,
+                      style: cardtextStyle2,)),
+
+                ElevatedButton(
+                    style: cardStyle1,
+                    onPressed: (){},
+                    child: Text("Boat",
+                      textAlign: TextAlign.center,
+                      style: cardtextStyle1,)),
+
+              ],),
+            ),
           ],
         ),
       ),

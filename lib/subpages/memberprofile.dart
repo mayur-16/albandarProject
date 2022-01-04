@@ -28,11 +28,11 @@ class _MemberProfileState extends State<MemberProfile> {
         child: Hero(
           tag: "memprof",
           child: Card(
-            color: Colors.green.shade400,
+            color: Colors.lightBlue.shade800,
             elevation: 15,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
-              side:  BorderSide(color: Colors.green.shade400),
+              side:   BorderSide(color: Colors.lightBlue.shade800),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -41,65 +41,67 @@ class _MemberProfileState extends State<MemberProfile> {
                   padding: const EdgeInsets.symmetric(vertical: 40),
                   child: Text("Member Profile\n[${widget.logindata['firstname']}]",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 20,color: Colors.black54,fontWeight: FontWeight.bold),),
+                    style: const TextStyle(fontSize: 20,color: Colors.white54,fontWeight: FontWeight.bold),),
                 ),
-                Card(
-                  elevation: 0,
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    side: const BorderSide(color: Colors.white),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: FutureBuilder<SubMemberDetails>(
-                        future: MyApi.getSubMemberdetails(
-                            memberno: widget.logindata['memberno']),
-                        builder: (_, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.done) {
-                            if (snapshot.hasData) {
-                              if (snapshot.data!.recordset.isNotEmpty) {
-                                List<RecordsetofSubmemberdetails> listofdata =
-                                    snapshot.data!.recordset;
+                Expanded(
+                  child: Card(
+                    elevation: 0,
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: const BorderSide(color: Colors.white),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: FutureBuilder<SubMemberDetails>(
+                          future: MyApi.getSubMemberdetails(
+                              memberno: widget.logindata['memberno']),
+                          builder: (_, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.done) {
+                              if (snapshot.hasData) {
+                                if (snapshot.data!.recordset.isNotEmpty) {
+                                  List<RecordsetofSubmemberdetails> listofdata =
+                                      snapshot.data!.recordset;
 
-                                return ListView.separated(
-                                    shrinkWrap: true,
-                                    itemCount: listofdata.length,
-                                    itemBuilder: (_, index) {
+                                  return ListView.separated(
+                                      shrinkWrap: true,
+                                      itemCount: listofdata.length,
+                                      itemBuilder: (_, index) {
 
-                                      String telno="${listofdata[index].teloff}";
-                                      String name="${listofdata[index].title} ${listofdata[index].name}";
-                                      String birthdate=listofdata[index].birthdt!.substring(0,10);
-                                      String relation="${listofdata[index].relation}";
+                                        String telno="${listofdata[index].teloff}";
+                                        String name="${listofdata[index].title} ${listofdata[index].name}";
+                                        String birthdate=listofdata[index].birthdt!.substring(0,10);
+                                        String relation="${listofdata[index].relation}";
 
-                                      return ListTile(
-                                        leading: Text(
-                                            "Tel no:\n$telno",style: style1),
-                                        title: Text(name,style: style2),
-                                        subtitle: Text("Birthdate : $birthdate",style: style3,),
-                                        trailing: Text("($relation)",style: style3,),);
-                                    },
-                                    separatorBuilder: (BuildContext context, int index) {
-                                      return const Divider(height: 0,thickness: 1);
-                                    });
-                              } else {
-                                return const Text("No submembers present for You!");
+                                        return ListTile(
+                                          leading: Text(
+                                              "Tel no:\n$telno",style: style1),
+                                          title: Text(name,style: style2),
+                                          subtitle: Text("Birthdate : $birthdate",style: style3,),
+                                          trailing: Text("($relation)",style: style3,),);
+                                      },
+                                      separatorBuilder: (BuildContext context, int index) {
+                                        return const Divider(height: 0,thickness: 1);
+                                      });
+                                } else {
+                                  return const Text("No submembers present for You!");
+                                }
+                              } else if (snapshot.hasError) {
+
+                                if (snapshot.error == TimeoutException) {
+                                  return const Text(
+                                      "Server is down! please try again!");
+                                } else {
+                                  return const Text(
+                                      "Some issues! please contact your manager.");
+                                }
                               }
-                            } else if (snapshot.hasError) {
-
-                              if (snapshot.error == TimeoutException) {
-                                return const Text(
-                                    "Server is down! please try again!");
-                              } else {
-                                return const Text(
-                                    "Some issues! please contact your manager.");
-                              }
+                            } else {
+                              return const Center(child: CircularProgressIndicator());
                             }
-                          } else {
-                            return const Center(child: CircularProgressIndicator());
-                          }
-                          return const SizedBox();
-                        }),
+                            return const SizedBox();
+                          }),
+                    ),
                   ),
                 ),
               ],

@@ -25,8 +25,8 @@ dovalidation() async {
     home: isLoggedIn? HomePage(logindata: logindetails,):const LoginPage(),
     theme: ThemeData(
       fontFamily: 'Overpass',
-      appBarTheme:  const AppBarTheme(
-        color: Colors.blueGrey,
+      appBarTheme:   AppBarTheme(
+        color: Colors.purple.shade900,
       ),
     ),
     debugShowCheckedModeBanner: false,

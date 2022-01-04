@@ -10,7 +10,6 @@ class AllServicesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle style1=const TextStyle(color: Colors.black38,fontSize: 13);
     TextStyle style2=const TextStyle(color: Colors.black45,fontSize: 13);
     TextStyle style3=const TextStyle(color: Colors.black54,fontSize: 12);
 
@@ -29,6 +28,7 @@ class AllServicesPage extends StatelessWidget {
                       snapshot.data!.recordset;
 
                   return ListView.separated(
+                    physics: const BouncingScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: listofdata.length,
                       itemBuilder: (_, index) {

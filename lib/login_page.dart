@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(height: MediaQuery.of(context).size.height*0.15),
-              Image.asset("assets/icons/albandaricon.jpg",
+              Image.asset("assets/icons/albandericon.jpg",
                   height: 100, width: 100),
               SizedBox(height: MediaQuery.of(context).size.height*0.10),
               TextFormField(
@@ -132,14 +132,18 @@ class _LoginPageState extends State<LoginPage> {
          String responseMemberno=response[0]['MemberNo'];
          String responseCprno=response[0]['CPRNo'];
          String responseACcode=response[0]['ACCODE'];
+         String responseTitle=response[0]['TITLE'];
          String responseFirstname=response[0]['NAME'];
+         String responseSurname=response[0]['SURNAME'];
          String responsephoneno=response[0]['TELOFF'];
 
          Map<String,String> logindata={
            'memberno':responseMemberno,
            'cprno':responseCprno,
            'accode':responseACcode,
+           'title':responseTitle,
          'firstname':responseFirstname,
+           'surname':responseSurname,
          'phoneno':responsephoneno
          };
 
