@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:albandar_project1/podos/submembers.dart';
+import 'package:albandar_project1/login_page.dart';
 import 'package:albandar_project1/services/apiservice.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
+
+import '../podos/submembers.dart';
 
 class MyDrawer extends StatelessWidget {
   final Map logindata;
@@ -53,17 +54,20 @@ class MyDrawer extends StatelessWidget {
                   "Contact no :",
                   style: TextStyle(color: Colors.black45),
                 ),
-                title: Text("${logindata['phoneno']}",
+                title: Text(logindata['residencyphoneno'].toString().isEmpty?"--":logindata['residencyphoneno'],
                     style: const TextStyle(color: Colors.black87))),
             ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.blue.shade700),
                 onPressed: () async {
-                  SharedPreferences sharedPreferences =
-                  await SharedPreferences.getInstance();
-                  sharedPreferences.setBool("isloggedIn", false);
-                  SystemNavigator.pop();
-                  Fluttertoast.showToast(msg: "Logged out successfully");
 
+                  //get database path
+                  String databasePath=await getDatabasesPath();
+                  String path="$databasePath/usercredentials.db";
+                  deleteDatabase(path);
+
+                  //navigate to login page
+                  Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (_)=>LoginPage()));
+                  Fluttertoast.showToast(msg: "Logged out successfully");
                 },
                 child: const Text("Logout",style: TextStyle(fontFamily: 'Overpass'),)),
           ],
@@ -86,9 +90,9 @@ class MycustomWidgets{
         height: MediaQuery.of(context).size.height*0.5,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
-          child: FutureBuilder<SubMemberDetails>(
-              future: MyApi.getSubMemberdetails(
-                  memberno: logindata['memberno']),
+          child: FutureBuilder<AllAgreementDetailsofSubMember>(
+              future: MyApi.getAllAgreementDetailsofsubmember(
+                  primarymember: logindata['memberno']),
               builder: (_, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasData) {
@@ -102,7 +106,7 @@ class MycustomWidgets{
 
                             String telno="${listofdata[index].teloff}";
                             String name="${listofdata[index].title} ${listofdata[index].name}";
-                            String birthdate=listofdata[index].birthdt!.substring(0,10);
+                            String birthdate=listofdata[index].birthdt.substring(0,10);
                             String relation="${listofdata[index].relation}";
 
                             return ListTile(

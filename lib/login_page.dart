@@ -7,7 +7,7 @@ import 'package:albandar_project1/home_page.dart';
 import 'package:albandar_project1/services/apiservice.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -43,6 +43,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: MediaQuery.of(context).size.height*0.10),
               TextFormField(
                 controller: membernocontroller,
+                keyboardType: TextInputType.number,
                 decoration:  InputDecoration(
                   hintText: "Enter member number.",
                   labelText: "Member no*",
@@ -63,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 obscureText: _isObscure,
                 controller: cprnocontroller,
+                keyboardType: TextInputType.number,
                 decoration:  InputDecoration(
                   labelText: "CPR no*",
                   hintText: "Enter your CPR number",
@@ -130,27 +132,45 @@ class _LoginPageState extends State<LoginPage> {
       if(response.isNotEmpty)
         {
          String responseMemberno=response[0]['MemberNo'];
+         String responsePrimary=response[0]['PRIMARYMEMBER'];
          String responseCprno=response[0]['CPRNo'];
          String responseACcode=response[0]['ACCODE'];
          String responseTitle=response[0]['TITLE'];
          String responseFirstname=response[0]['NAME'];
          String responseSurname=response[0]['SURNAME'];
-         String responsephoneno=response[0]['TELOFF'];
+         String responsephonenoOffice=response[0]['TELOFF'];
+         String responsephonenoResidency=response[0]['TELRES'];
+         String responseBirthdate=response[0]['BIRTHDT'].toString().substring(0,10);
+         String responsemaritalstatus=response[0]['MARITAL'];
+         String responseaddress1=response[0]['ADD1'];
+         String responseaddress2=response[0]['ADD2'];
+         String responseaddress3=response[0]['ADD3'];
+         String responseNation=response[0]['NATION'];
+         String responsePosition=response[0]['POSITION'];
 
          Map<String,String> logindata={
            'memberno':responseMemberno,
+           'primarymemberno':responsePrimary,
            'cprno':responseCprno,
            'accode':responseACcode,
+           'position':responsePosition,
            'title':responseTitle,
          'firstname':responseFirstname,
            'surname':responseSurname,
-         'phoneno':responsephoneno
+         'residencyphoneno':responsephonenoResidency,
+           'officephoneno':responsephonenoOffice,
+           'birthdate':responseBirthdate,
+           'maritalstatus':responsemaritalstatus,
+           'address1':responseaddress1,
+           'address2':responseaddress2,
+           'address3':responseaddress3,
+           'nation':responseNation,
          };
-
-         savedatatosharedpreference(details: logindata);
 
         if(responseCprno==enteredCPRnovalue)
           {
+            savedatatosqlflite(details: logindata);
+
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=> HomePage(logindata: logindata,)));
 
             ScaffoldMessenger.of(context)
@@ -190,15 +210,29 @@ if(error==TimeoutException)
 
   }
 
-  void savedatatosharedpreference({required Map<String,String> details}) async{
-    
-    //convert map to string
-    String data=json.encode(details);
-    
-    //save data to sharedpreference
-    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
-    sharedPreferences.setBool("isloggedIn", true);
-    sharedPreferences.setString("logindata", data);
+  void savedatatosqlflite({required Map<String,String> details}) async{
 
+    //get database path
+    String databasePath=await getDatabasesPath();
+    String path="$databasePath/usercredentials.db";
+
+    //open the database
+    Database database=await openDatabase(path);
+
+    //insert user details to USER TABLE
+    await database.transaction((txn) async{
+      int id=await txn.rawInsert(
+        'INSERT INTO USER(memberno ,cprno ,accode ,position ,title ,firstname ,surname ,residencyphoneno ,'
+            'officephoneno  ,birthdate ,maritalstatus ,address1,address2 ,address3 ,nation ,loggedin) '
+            'VALUES("${details['memberno']}","${details['cprno']}","${details['accode']}","${details['position']}",'
+            '"${details['title']}","${details['firstname']}","${details['surname']}","${details['residencyphoneno']}",'
+            '"${details['officephoneno']}","${details['birthdate']}","${details['maritalstatus']}","${details['address1']}",'
+            '"${details['address2']}","${details['address3']}","${details['nation']}",1)'
+      );
+      log(id.toString());
+    });
+
+    //Close the database
+    await database.close();
   }
 }

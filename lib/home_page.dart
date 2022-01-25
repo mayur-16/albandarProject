@@ -1,7 +1,15 @@
+
+import 'package:albandar_project1/subpages/allagreementpage.dart';
 import 'package:albandar_project1/subpages/allservicespage.dart';
-import 'package:albandar_project1/subpages/memberprofile.dart';
+import 'package:albandar_project1/subpages/boatdetailspage.dart';
+import 'package:albandar_project1/subpages/memberdependents.dart';
+import 'package:albandar_project1/subpages/payments_bills_page.dart';
+import 'package:albandar_project1/subpages/profilereport.dart';
 import 'package:flutter/material.dart';
 import 'package:albandar_project1/services/widgetservice.dart';
+import 'package:flutter/services.dart';
+
+
 
 class HomePage extends StatefulWidget {
   final Map logindata;
@@ -13,6 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   Map logindata = {};
    TextStyle cardtextStyle1= const TextStyle(fontSize: 15,color: Colors.white70);
   TextStyle cardtextStyle2= const TextStyle(fontSize: 15,color: Colors.white);
@@ -33,6 +42,14 @@ class _HomePageState extends State<HomePage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ));
+
+
+  @override
+  void initState() {
+    super.initState();
+    //Workmanager().initialize( callbackDispatcher,isInDebugMode: true);
+    //Workmanager().registerPeriodicTask("1", fetchBackground,frequency: Duration(minutes: 15));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,25 +88,21 @@ class _HomePageState extends State<HomePage> {
               childAspectRatio: 1.8,
               shrinkWrap: true,
               children: [
-                Hero(
-                  tag: "memprof",
-                  child: ElevatedButton(
-                    style: cardStyle1,
-                      onPressed: (){
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) =>
-                                    MemberProfile(logindata: logindata)));
-                      },
-                      child: Text("Member\nProfile",
-                      textAlign: TextAlign.center,
-                          style: cardtextStyle1,)),
-                ),
+                ElevatedButton(
+                  style: cardStyle1,
+                    onPressed: (){
+                      HapticFeedback.lightImpact();
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=> ProfileReportPage(logindata: logindata,)));
+                    },
+                    child: Text("Member\nProfile",
+                    textAlign: TextAlign.center,
+                        style: cardtextStyle1,)),
 
                 ElevatedButton(
                     style: cardStyle2,
-                    onPressed: (){},
+                    onPressed: (){
+                      HapticFeedback.lightImpact();
+                    },
                     child: Text("Member\nagreement",
                       textAlign: TextAlign.center,
                       style: cardtextStyle2,)),
@@ -97,6 +110,7 @@ class _HomePageState extends State<HomePage> {
                 ElevatedButton(
                     style: cardStyle2,
                     onPressed: (){
+                      HapticFeedback.lightImpact();
                       Navigator.of(context).push(MaterialPageRoute(builder: (_)=>const AllServicesPage()));
                     },
                     child: Text("Product&\nservices",
@@ -105,35 +119,52 @@ class _HomePageState extends State<HomePage> {
 
                 ElevatedButton(
                     style: cardStyle1,
-                    onPressed: (){},
+                    onPressed: (){
+                      HapticFeedback.lightImpact();
+                      Navigator.push(context, MaterialPageRoute(builder: (_)=>PaymentsAndBills(accode: logindata['accode'],)));
+                    },
                     child: Text("Payment\n&bills",
                       textAlign: TextAlign.center,
                       style: cardtextStyle1,)),
 
                 ElevatedButton(
                     style: cardStyle1,
-                    onPressed: (){},
-                    child: Text("Reports",
+                    onPressed: (){
+                      HapticFeedback.lightImpact();
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>AllAgreementPage(logindata: widget.logindata,)));
+                    },
+                    child: Text("Member Details",
                       textAlign: TextAlign.center,
                       style: cardtextStyle1,)),
 
                 ElevatedButton(
                     style: cardStyle2,
-                    onPressed: (){},
+                    onPressed: (){
+                      HapticFeedback.lightImpact();
+                    },
                     child: Text("Notifications",
                       textAlign: TextAlign.center,
                       style: cardtextStyle2,)),
 
-                ElevatedButton(
-                    style: cardStyle2,
-                    onPressed: (){},
-                    child: Text("Dependence",
-                      textAlign: TextAlign.center,
-                      style: cardtextStyle2,)),
+                Hero(
+                  tag: "memprof",
+                  child: ElevatedButton(
+                      style: cardStyle2,
+                      onPressed: (){
+                        HapticFeedback.lightImpact();
+                        Navigator.push( context, MaterialPageRoute(builder: (_) =>MemberDependents(logindata: logindata)));
+                      },
+                      child: Text("Dependents",
+                        textAlign: TextAlign.center,
+                        style: cardtextStyle2,)),
+                ),
 
                 ElevatedButton(
                     style: cardStyle1,
-                    onPressed: (){},
+                    onPressed: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_)=>BoatDetails(accodevalue: logindata['accode'],)));
+                      HapticFeedback.lightImpact();
+                    },
                     child: Text("Boat",
                       textAlign: TextAlign.center,
                       style: cardtextStyle1,)),
@@ -145,4 +176,5 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
 }
